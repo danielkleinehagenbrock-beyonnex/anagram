@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: Anagram Check
+  version: 0.0.1
+components:
+  schemas:
+    AnagramCheckRequest:
+      type: object
+      description: Represents a anagram check request.
+      example: {
+        "source": "Madam Curie",
+        "possible_anagram": "Radium came"
+      }
+      required:
+        - source
+        - possible_anagram
+      properties:
+        source:
+          type: string
+          example: "anagram"
+          description: The text the anagram check should be based on.
+        possible_anagram:
+          type: string
+          example: "nag a ram"
+          description: The text which is the possible anagram of the given source.
+    AnagramCheckResponse:
+      type: object
+      description: Result of a anagram check.
+      example: {
+        "is_anagram": "true"
+      }
+      required:
+        - is_anagram
+      properties:
+        is_anagram:
+          type: boolean
+          example: "true"
+          description: The actual result if the two given texts are anagrams.
+paths:
+  "/anagram-check":
+    post:
+      summary: Checks if a given text is a anagram of a second given text.
+      requestBody:
+        required: true
+        content:
+          application/vnd.beyonnex.anagram-check.request.v1+json:
+            schema:
+              $ref: "#/components/schemas/AnagramCheckRequest"
+      responses:
+        200:
+          description: Result of the anagram check.
+          content:
+            application/vnd.beyonnex.anagram-check.response.v1+json:
+              schema:
+                $ref: "#/components/schemas/AnagramCheckResponse"
+        400:
+          description: Faulty request format
+        415:
+          description: Unsupported content type for request
+        500:
+          description: Error in processing the anagram check
