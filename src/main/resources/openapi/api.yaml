@@ -43,7 +43,22 @@ paths:
       requestBody:
         required: true
         content:
-          application/vnd.beyonnex.anagram-check.request.v1+json:
+          application/vnd.beyonnex.anagram-check.request.count.v1+json:
+            examples:
+              count:
+                summary: Anagram check is backed by counting the chars in the given texts.
+                value:
+                  source: restful
+                  possible_anagram: fluster
+            schema:
+              $ref: "#/components/schemas/AnagramCheckRequest"
+          application/vnd.beyonnex.anagram-check.request.sort.v1+json:
+            examples:
+              count:
+                summary: Anagram check is backed by comparing the sorted the given texts.
+                value:
+                  source: funeral
+                  possible_anagram: real fun
             schema:
               $ref: "#/components/schemas/AnagramCheckRequest"
       responses:

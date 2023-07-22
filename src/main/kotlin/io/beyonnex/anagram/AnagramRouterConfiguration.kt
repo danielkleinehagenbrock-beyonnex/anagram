@@ -17,7 +17,8 @@ class AnagramRouterConfiguration(
     @Bean
     fun anagramRouter(): RouterFunction<ServerResponse> = coRouter {
         POST(anagramCheckUrl).nest {
-            contentType(AnagramCheckRequest.mediaType, handlerFunctions::checkForAnagram)
+            contentType(AnagramCheckRequest.mediaTypeCount, handlerFunctions::checkForAnagram)
+            contentType(AnagramCheckRequest.mediaTypeSort, handlerFunctions::checkForAnagramVerifiedBySorting)
             contentType(MediaType.ALL) { ServerResponse.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).buildAndAwait() }
         }
     }
@@ -32,7 +33,8 @@ data class AnagramCheckRequest(
     val possibleAnagram: String
 ) {
     companion object {
-        val mediaType: MediaType = MediaType("application", "vnd.beyonnex.anagram-check.request.v1+json")
+        val mediaTypeCount: MediaType = MediaType("application", "vnd.beyonnex.anagram-check.request.count.v1+json")
+        val mediaTypeSort: MediaType = MediaType("application", "vnd.beyonnex.anagram-check.request.sort.v1+json")
     }
 }
 

@@ -2,6 +2,7 @@ package io.beyonnex.anagram
 
 import com.ninjasquad.springmockk.SpykBean
 import io.mockk.coEvery
+import io.mockk.coVerify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -20,13 +21,14 @@ class AnagramRouterConfigurationTest(
     private lateinit var handlerFunctions: AnagramHandlerFunctions
 
     @Test
-    fun `Verify anagram check endpoint successfully verifies anagrams`() {
+    fun `Verify anagram check endpoint successfully verifies anagrams with counting chars`() {
         // given/when
         val response = client.exchangeAnagramCheck(
             request = AnagramCheckRequest(
                 source = "abc",
                 possibleAnagram = "cba"
-            )
+            ),
+            contentType = AnagramCheckRequest.mediaTypeCount
         )
         val expected = AnagramCheckResponse(isAnagram = true)
 
@@ -35,16 +37,18 @@ class AnagramRouterConfigurationTest(
             .expectStatus().is2xxSuccessful
             .expectHeader().contentType(AnagramCheckResponse.mediaType)
             .expectBody(AnagramCheckResponse::class.java).isEqualTo(expected)
+        coVerify(atLeast = 1) { handlerFunctions.checkForAnagram(any()) }
     }
 
     @Test
-    fun `Verify anagram check endpoint identifies non anagrams`() {
+    fun `Verify anagram check endpoint identifies non anagrams with counting chars`() {
         // given/when
         val response = client.exchangeAnagramCheck(
             request = AnagramCheckRequest(
                 source = "abc",
                 possibleAnagram = "def"
-            )
+            ),
+            contentType = AnagramCheckRequest.mediaTypeCount
         )
         val expected = AnagramCheckResponse(isAnagram = false)
 
@@ -53,6 +57,47 @@ class AnagramRouterConfigurationTest(
             .expectStatus().is2xxSuccessful
             .expectHeader().contentType(AnagramCheckResponse.mediaType)
             .expectBody(AnagramCheckResponse::class.java).isEqualTo(expected)
+        coVerify(atLeast = 1) { handlerFunctions.checkForAnagram(any()) }
+    }
+
+    @Test
+    fun `Verify anagram check endpoint successfully verifies anagrams with sorting chars`() {
+        // given/when
+        val response = client.exchangeAnagramCheck(
+            request = AnagramCheckRequest(
+                source = "abc",
+                possibleAnagram = "cba"
+            ),
+            contentType = AnagramCheckRequest.mediaTypeSort
+        )
+        val expected = AnagramCheckResponse(isAnagram = true)
+
+        // then
+        response
+            .expectStatus().is2xxSuccessful
+            .expectHeader().contentType(AnagramCheckResponse.mediaType)
+            .expectBody(AnagramCheckResponse::class.java).isEqualTo(expected)
+        coVerify(atLeast = 1) { handlerFunctions.checkForAnagramVerifiedBySorting(any()) }
+    }
+
+    @Test
+    fun `Verify anagram check endpoint identifies non anagrams with sorting chars`() {
+        // given/when
+        val response = client.exchangeAnagramCheck(
+            request = AnagramCheckRequest(
+                source = "abc",
+                possibleAnagram = "def"
+            ),
+            contentType = AnagramCheckRequest.mediaTypeSort
+        )
+        val expected = AnagramCheckResponse(isAnagram = false)
+
+        // then
+        response
+            .expectStatus().is2xxSuccessful
+            .expectHeader().contentType(AnagramCheckResponse.mediaType)
+            .expectBody(AnagramCheckResponse::class.java).isEqualTo(expected)
+        coVerify(atLeast = 1) { handlerFunctions.checkForAnagramVerifiedBySorting(any()) }
     }
 
     @Test
@@ -60,7 +105,7 @@ class AnagramRouterConfigurationTest(
         // given/when
         val response = client.post()
             .uri(AnagramRouterConfiguration.anagramCheckUrl)
-            .contentType(AnagramCheckRequest.mediaType)
+            .contentType(AnagramCheckRequest.mediaTypeCount)
             .bodyValue(
                 """{"source":"abc","possible anagram":"def"}""".trimIndent()
             )
@@ -78,11 +123,13 @@ class AnagramRouterConfigurationTest(
             request = AnagramCheckRequest(
                 source = "abc",
                 possibleAnagram = "def"
-            )
+            ),
+            contentType = AnagramCheckRequest.mediaTypeCount
         )
 
         // then
         response.expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+        coVerify(atLeast = 1) { handlerFunctions.checkForAnagram(any()) }
     }
 
     @Test
@@ -104,7 +151,7 @@ class AnagramRouterConfigurationTest(
     }
 
     private fun WebTestClient.exchangeAnagramCheck(
-        contentType: MediaType? = AnagramCheckRequest.mediaType,
+        contentType: MediaType?,
         request: AnagramCheckRequest? = null
     ) = this.post()
         .uri(AnagramRouterConfiguration.anagramCheckUrl)
