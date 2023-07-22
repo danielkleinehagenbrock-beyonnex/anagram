@@ -10,6 +10,7 @@ private fun String.countCharacters(): Map<Char, Long> =
         this@countCharacters
             .lowercase()
             .toCharArray()
+            .purgeWhitespacesAndPunctuation()
             .forEach { char ->
                 this[char] = (this[char] ?: 0L).inc()
             }
