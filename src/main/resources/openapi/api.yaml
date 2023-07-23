@@ -39,7 +39,7 @@ components:
 paths:
   "/anagram-check":
     post:
-      summary: Checks if a given text is a anagram of a second given text.
+      summary: Checks if a given text is a anagram of a second given text. The content type of the request determines which check approach for anagrams is used by the endpoint.
       requestBody:
         required: true
         content:
