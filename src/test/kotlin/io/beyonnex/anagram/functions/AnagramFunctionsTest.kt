@@ -1,4 +1,4 @@
-package io.beyonnex.anagram
+package io.beyonnex.anagram.functions
 
 import assertk.assertThat
 import assertk.assertions.isFalse

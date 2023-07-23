@@ -1,5 +1,9 @@
-package io.beyonnex.anagram
+package io.beyonnex.anagram.handler
 
+import io.beyonnex.anagram.functions.isAnagramOf
+import io.beyonnex.anagram.functions.isAnagramOfVerifiedBySorting
+import io.beyonnex.anagram.router.AnagramCheckRequest
+import io.beyonnex.anagram.router.AnagramCheckResponse
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse

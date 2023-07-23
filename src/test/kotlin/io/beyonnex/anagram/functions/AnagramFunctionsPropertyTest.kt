@@ -1,4 +1,4 @@
-package io.beyonnex.anagram
+package io.beyonnex.anagram.functions
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

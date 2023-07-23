@@ -1,4 +1,4 @@
-package io.beyonnex.anagram
+package io.beyonnex.anagram.functions
 
 fun CharArray.purgeWhitespacesAndPunctuation(): List<Char> = this
     .filter { !(it.isWhitespace() || it.isPunctuation()) }

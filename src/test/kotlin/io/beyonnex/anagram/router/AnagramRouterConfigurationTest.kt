@@ -1,6 +1,7 @@
-package io.beyonnex.anagram
+package io.beyonnex.anagram.router
 
 import com.ninjasquad.springmockk.SpykBean
+import io.beyonnex.anagram.handler.AnagramHandlerFunctions
 import io.mockk.coEvery
 import io.mockk.coVerify
 import org.junit.jupiter.api.Test

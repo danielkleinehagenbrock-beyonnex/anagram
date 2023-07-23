@@ -1,5 +1,6 @@
-package io.beyonnex.anagram
+package io.beyonnex.anagram.functions
 
+import io.beyonnex.anagram.AnagramApplication
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
